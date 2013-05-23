@@ -1,0 +1,110 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title> - jsFiddle demo by adamschwartz</title>
+
+  <script type='text/javascript' src='//code.jquery.com/jquery-1.9.1.js'></script>
+  <link rel="stylesheet" type="text/css" href="/css/normalize.css">
+
+
+  <link rel="stylesheet" type="text/css" href="/css/result-light.css">
+
+  <style type='text/css'>
+    body {
+    background: #000;
+    overflow: hidden;
+}
+
+.vine-iframe-wrapper {
+    width: 600px;
+    height: 600px;
+    overflow: hidden;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-top: -300px;
+    margin-left: -300px;
+}
+
+.vine-iframe-wrapper.vine-iframe-wrapper-background {
+    -webkit-filter: blur(10px);
+    -webkit-transform: scale(3);
+}
+
+.vine-iframe-wrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 965px;
+    height: 624px;
+}
+  </style>
+
+
+
+<script type='text/javascript'>//<![CDATA[
+$(window).load(function(){
+var vines = [];
+var vine_dedup = {};
+var current_vine = 0;
+
+function cycle_vine() {
+    $('#main-vine').attr('src', vines[current_vine]);
+    $('#main-vine-background').attr('src', vines[current_vine]);
+    current_vine = (current_vine + 1) % vines.length;
+    if (current_vine >= vines.length) {
+        window.location.reload();
+    }
+}
+
+function load_vines() {
+    vines = [];
+    vine_dedup = {};
+
+    $.getJSON( "http://search.twitter.com/search.json?q=vine.co+bar+mitzvah&rpp=100&include_entities=true&result_type=mixed&callback=?", function( data ) {
+
+
+        for (var i=0; i<data.results.length; i++) {
+            for (var j=0; j<data.results[i].entities.urls.length; j++) {
+                var url = data.results[i].entities.urls[j].expanded_url;
+
+                if (url.indexOf("vine.co/v/") > -1) {
+                    if (!vine_dedup[url]) {
+                        vines.push(url)
+                        vine_dedup[url] = true;
+                    }
+                }
+            }
+        }
+
+        console.log(vines);
+
+        current_vine = 0;
+        cycle_vine();
+        setInterval(cycle_vine, 60000);
+    });
+}
+
+load_vines();
+});//]]>
+
+</script>
+
+
+</head>
+<body>
+  <div class="vine-iframe-wrapper vine-iframe-wrapper-background">
+    <iframe src="" id="main-vine-background" frameborder="0" scrolling="no"></iframe>
+</div>
+
+<div class="vine-iframe-wrapper">
+    <iframe src="" id="main-vine" frameborder="0" scrolling="no"></iframe>
+</div>
+
+</body>
+
+
+</html>
+
