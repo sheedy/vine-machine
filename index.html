@@ -1,110 +1,185 @@
-
 <!DOCTYPE html>
 <html>
-<head>
-  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <title> - jsFiddle demo by adamschwartz</title>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <title>TV – MSSPM</title>
+        <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
+        <style type="text/css">
+            * {
+                box-sizing: border-box;
+                font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+                outline: none;
+            }
 
-  <script type='text/javascript' src='//code.jquery.com/jquery-1.9.1.js'></script>
-  <link rel="stylesheet" type="text/css" href="/css/normalize.css">
+            body {
+                background: #000;
+                overflow: hidden;
+            }
 
+            .vine-iframe-wrapper {
+                width: 600px;
+                height: 600px;
+                overflow: hidden;
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                margin-top: -300px;
+                margin-left: -300px;
+            }
 
-  <link rel="stylesheet" type="text/css" href="/css/result-light.css">
+            .vine-iframe-wrapper.vine-iframe-wrapper-background {
+                -webkit-filter: blur(30px);
+                -webkit-transform: scale(3);
+            }
 
-  <style type='text/css'>
-    body {
-    background: #000;
-    overflow: hidden;
-}
+            .vine-iframe-wrapper iframe {
+                position: absolute;
+                top: -61px;
+                left: -11px;
+                width: 622px;
+                height: 800px;
+                border: 0;
+            }
 
-.vine-iframe-wrapper {
-    width: 600px;
-    height: 600px;
-    overflow: hidden;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    margin-top: -300px;
-    margin-left: -300px;
-}
+            .vine-mouse-cover {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+            }
 
-.vine-iframe-wrapper.vine-iframe-wrapper-background {
-    -webkit-filter: blur(10px);
-    -webkit-transform: scale(3);
-}
+            .vine-hash-input {
+                transition: all 0.5s;
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                width: 600px;
+                margin-left: -300px;
+                height: 100px;
+                margin-top: -400px;
+                padding: 20px;
+                font-size: 50px;
+                border: 0;
+                background: rgba(0, 0, 0, 0);
+                color: #fff;
+                text-shadow: 1px 1px rgba(0, 0, 0, 0.3);
+                opacity: 0.5;
+                text-align: center;
+                font-weight: 300;
+                /* text-transform: uppercase; */
+            }
 
-.vine-iframe-wrapper iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 965px;
-    height: 624px;
-}
-  </style>
+            .vine-hash-input:focus {
+                background: rgba(0, 0, 0, 0.8);
+                opacity: 1;
+            }
 
+            .vine-hash-input::-webkit-input-placeholder {
+                color: rgba(255, 255, 255, 1);
+            }
 
+            .vine-hash-input:focus::-webkit-input-placeholder {
+                text-indent: -9999px;
+            }
 
-<script type='text/javascript'>//<![CDATA[
-$(window).load(function(){
-var vines = [];
-var vine_dedup = {};
-var current_vine = 0;
+            .logo {
+                cursor: pointer;
+                transition: -webkit-filter 0.5s, all 0.5s;
+                position: fixed;
+                bottom: 10px;
+                right: 15px;
+                width: 250px;
+                -webkit-filter: grayscale(1);
+                opacity: 0.3;
+            }
 
-function cycle_vine() {
-    $('#main-vine').attr('src', vines[current_vine]);
-    $('#main-vine-background').attr('src', vines[current_vine]);
-    current_vine = (current_vine + 1) % vines.length;
-    if (current_vine >= vines.length) {
-        window.location.reload();
-    }
-}
+            .logo:hover {
+                -webkit-filter: grayscale(0);
+                opacity: 0.8;
+            }
+        </style>
+        <script type="text/javascript">
+            var vine = {};
 
-function load_vines() {
-    vines = [];
-    vine_dedup = {};
+            $(window).load(function(){
+                vine.video_length = 6.5 * 1000;
 
-    $.getJSON( "http://search.twitter.com/search.json?q=vine.co+bar+mitzvah&rpp=100&include_entities=true&result_type=mixed&callback=?", function( data ) {
+                vine.start_cycle_vine = function() {
+                    vine.current_index = 0;
+                    vine.cycle_vine();
+                    clearInterval(vine.cycle_vine_interval);
+                    vine.cycle_vine_interval = setInterval(vine.cycle_vine, vine.video_length * 3);
+                }
 
-
-        for (var i=0; i<data.results.length; i++) {
-            for (var j=0; j<data.results[i].entities.urls.length; j++) {
-                var url = data.results[i].entities.urls[j].expanded_url;
-
-                if (url.indexOf("vine.co/v/") > -1) {
-                    if (!vine_dedup[url]) {
-                        vines.push(url)
-                        vine_dedup[url] = true;
+                vine.cycle_vine = function() {
+                    $('.vine-iframe-wrapper iframe').each(function(){
+                        $(this).attr('src', vine.url_list[vine.current_index]);
+                    });
+                    vine.current_index = (vine.current_index + 1) % vine.url_list.length;
+                    if (vine.current_index >= vine.url_list.length) {
+                        vine.load_vines();
                     }
                 }
-            }
-        }
 
-        console.log(vines);
+                vine.load_vines = function() {
+                    var i, j, url;
 
-        current_vine = 0;
-        cycle_vine();
-        setInterval(cycle_vine, 60000);
-    });
-}
+                    vine.url_list = [];
+                    vine.url_dict = {};
 
-load_vines();
-});//]]>
+                    $.getJSON('http://search.twitter.com/search.json?q=' + vine.get_search_query() + '&rpp=100&include_entities=true&result_type=mixed&callback=?', function(data) {
+                        for (i = 0; i < data.results.length; i++) {
+                            for (j = 0; j < data.results[i].entities.urls.length; j++) {
+                                url = data.results[i].entities.urls[j].expanded_url;
 
-</script>
+                                if (url.indexOf('vine.co/v/') > -1) {
+                                    if (!vine.url_dict[url]) {
+                                        vine.url_list.push(url + '/embed/postcard')
+                                        vine.url_dict[url] = true;
+                                    }
+                                }
+                            }
+                        }
 
+                        vine.start_cycle_vine();
+                    });
+                }
 
-</head>
-<body>
-  <div class="vine-iframe-wrapper vine-iframe-wrapper-background">
-    <iframe src="" id="main-vine-background" frameborder="0" scrolling="no"></iframe>
-</div>
+                vine.get_search_query = function() {
+                    var query = $('.vine-hash-input').val().replace('#', '').replace(new RegExp(' ', 'g'), '+');
+                    return 'vine.co+' + query;
+                }
 
-<div class="vine-iframe-wrapper">
-    <iframe src="" id="main-vine" frameborder="0" scrolling="no"></iframe>
-</div>
+                vine.setup_search = function() {
+                    $('.vine-hash-input').keyup(function(e){
+                        if (e.keyCode === 13) {
+                            vine.load_vines();
+                        }
+                    });
+                }
 
-</body>
+                vine.setup_vine_autoplay = function() {
+                    $('.vine-iframe-wrapper iframe').load(function(){
+                        this.contentWindow.postMessage('play', '*');
+                    });
+                }
 
-
+                vine.setup_search();
+                vine.setup_vine_autoplay();
+                vine.load_vines();
+            });
+        </script>
+    </head>
+    <body>
+        <div class="vine-iframe-wrapper vine-iframe-wrapper-background">
+            <iframe src="" frameborder="0" scrolling="no"></iframe>
+        </div>
+        <div class="vine-mouse-cover"></div>
+        <div class="vine-iframe-wrapper">
+            <iframe src="" frameborder="0" scrolling="no"></iframe>
+        </div>
+        <input class="vine-hash-input" type="text" autocomplete="off" spellcheck="false" maxlength="32" value="" placeholder="Search vines..." />
+        <a href="http://mysupersweetprommitzvah.com" target="_blank"><img class="logo" src="logo.png" /></a>
+    </body>
 </html>
-
