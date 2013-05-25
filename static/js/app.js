@@ -76,12 +76,12 @@
 
 window.require.define({"application": function(exports, require, module) {
   (function() {
-    var Application, Login, Router,
+    var Application, iphone, vine,
       __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-    Login = require('lib/login');
+    vine = require('vine');
 
-    Router = require('lib/router');
+    iphone = require('iphone');
 
     Application = (function() {
 
@@ -90,27 +90,10 @@ window.require.define({"application": function(exports, require, module) {
       }
 
       Application.prototype.initialize = function() {
-        var _this = this;
-        this.msspm = new Login;
-        this.views = {};
-        this.collections = {};
-        this.setupStyles();
-        return this.msspm.verifyUser(function(data) {
-          $('#loader').hide();
-          _this.router = new Router;
-          Backbone.history.start({
-            pushState: true,
-            root: '/tv/'
-          });
-          return typeof Object.freeze === "function" ? Object.freeze(_this) : void 0;
-        });
-      };
-
-      Application.prototype.setupStyles = function() {
-        return $('body').css({
-          background: constants.styles.background,
-          color: "rgb(" + constants.styles.color_rgb + ")"
-        });
+        if ((navigator.userAgent.match(/iPhone/i)) || (navigator.userAgent.match(/iPod/i))) {
+          return iphone.init();
+        }
+        return vine.init();
       };
 
       return Application;
@@ -140,91 +123,6 @@ window.require.define({"collections/collection": function(exports, require, modu
       return Collection;
 
     })(Backbone.Collection);
-
-  }).call(this);
-  
-}});
-
-window.require.define({"collections/employees": function(exports, require, module) {
-  (function() {
-    var Collection, Employees, defaultGravatarImage,
-      __hasProp = Object.prototype.hasOwnProperty,
-      __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
-
-    Collection = require('./collection');
-
-    defaultGravatarImage = location.search !== '?shame' ? '404' : 'blank';
-
-    Employees = (function(_super) {
-
-      __extends(Employees, _super);
-
-      function Employees() {
-        Employees.__super__.constructor.apply(this, arguments);
-      }
-
-      Employees.prototype.url = function() {
-        return "https://" + env.API_BASE + "/awth/v1/users?active=true&access_token=" + app.hubspot.context.auth.access_token.token + "&active-permissions=true&hub-id=" + env.LOGIN_PORTAL + "&permissions=true";
-      };
-
-      Employees.prototype.parse = function(data) {
-        var _this = this;
-        return _.map(data.users, function(employee) {
-          employee.gravatar = "https://secure.gravatar.com/avatar/" + (CryptoJS.MD5(employee.email)) + "?d=" + defaultGravatarImage;
-          return employee;
-        });
-      };
-
-      Employees.prototype.setRoles = function(roleCollection) {
-        this.each(function(employeeModel) {
-          var employee, role, roleId, _ref, _ref2, _ref3, _ref4;
-          role = '';
-          employee = employeeModel.attributes;
-          if ((_ref = employee.permissionInfo) != null ? (_ref2 = _ref.permissions) != null ? _ref2.length : void 0 : void 0) {
-            roleId = (_ref3 = employee.permissionInfo) != null ? _ref3.permissions[0].roleId : void 0;
-            role = (_ref4 = roleCollection.get(roleId)) != null ? _ref4.get('name') : void 0;
-          }
-          switch (employee.email) {
-            case 'jdsherman@hubspot.com':
-              role = 'COO';
-              break;
-            case 'bhalligan@hubspot.com':
-              role = 'Overhead';
-              break;
-            case 'dshah@hubspot.com':
-              role = 'CTO & Founder';
-              break;
-            case 'dcancel@hubspot.com':
-              role = 'Chief Product Officer';
-              break;
-            case 'mvolpe@hubspot.com':
-              role = 'Chief Marketing Officer';
-              break;
-            case 'dstack@hubspot.com':
-              role = 'CFO';
-              break;
-            case 'joneill@hubspot.com':
-              role = 'Chief Information Officer';
-              break;
-            case 'jkelleher@hubspot.com':
-              role = 'General Counsel';
-              break;
-            case 'mroberge@hubspot.com':
-              role = 'SVP Sales and Services';
-              break;
-            case 'amoorthy@hubspot.com':
-              role = 'VP Business Development';
-          }
-          return employee.role = role;
-        });
-        return this;
-      };
-
-      return Employees;
-
-    })(Collection);
-
-    module.exports = Employees;
 
   }).call(this);
   
@@ -295,28 +193,8 @@ window.require.define({"constants": function(exports, require, module) {
   
 }});
 
-window.require.define({"env": function(exports, require, module) {
-  (function() {
-
-    module.exports = {
-      env: 'local',
-      API_BASE: 'api.hubapiqa.com',
-      APP_BASE: 'app.hubspotqa.com',
-      LOGIN_BASE: 'login.hubspotqa.com',
-      NAV_BASE: 'navqa.hubapi.com',
-      STATIC_BASE: 'static.hubspotqa.com',
-      INTERNAL_BASE: 'internal.hubapiqa.com',
-      LOGIN_PORTAL: 99121841
-    };
-
-  }).call(this);
-  
-}});
-
 window.require.define({"initialize": function(exports, require, module) {
   (function() {
-
-    window.env = require('env');
 
     window.utils = require('utils');
 
@@ -334,166 +212,28 @@ window.require.define({"initialize": function(exports, require, module) {
   
 }});
 
-window.require.define({"lib/login": function(exports, require, module) {
+window.require.define({"iphone": function(exports, require, module) {
   (function() {
-    var Login,
-      __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+    var iphone;
 
-    Login = (function() {
+    iphone = {};
 
-      function Login() {
-        this.verifyUser = __bind(this.verifyUser, this);
+    iphone.init = function() {
+      if (!window.navigator.standalone) {
+        return alert('Add My Super Sweet Promitzvah to your Home Screen');
       }
-
-      Login.prototype.verifyUser = function(onSuccess) {
-        return onSuccess();
-      };
-
-      return Login;
-
-    })();
-
-    module.exports = Login;
-
-  }).call(this);
-  
-}});
-
-window.require.define({"lib/router": function(exports, require, module) {
-  (function() {
-    var NavigationView, Router, TVView, navHandler, tvHandler,
-      __hasProp = Object.prototype.hasOwnProperty,
-      __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
-
-    TVView = require('views/tv');
-
-    NavigationView = require('views/navigation');
-
-    navHandler = function() {
-      if (!(app.views.navigationView != null)) {
-        app.views.navigationView = new NavigationView;
-      }
-      return app.views.navigationView.render();
+      return iphone.setup_events();
     };
 
-    tvHandler = function() {
-      if (!(app.views.tvView != null)) app.views.tvView = new TVView;
-      return app.views.tvView.render();
+    iphone.setup_events = function() {
+      return window.ondeviceorientation = function(event) {
+        var alpha;
+        alpha = 360 - parseInt(event.alpha, 10);
+        return $('body').css('background-color', 'hsla(' + alpha + ', 50%, 75%, 1)');
+      };
     };
 
-    Router = (function(_super) {
-
-      __extends(Router, _super);
-
-      function Router() {
-        Router.__super__.constructor.apply(this, arguments);
-      }
-
-      Router.prototype.routes = {
-        '': 'homeHandler',
-        '/': 'homeHandler',
-        'vine': 'vineHandler',
-        'vine/': 'vineHandler',
-        'rankings': 'rankingsHandler',
-        'rankings/': 'rankingsHandler',
-        '*anything': 'homeHandler'
-      };
-
-      Router.prototype.basicPageHandler = function() {
-        app.views.current_view = void 0;
-        return $('#page').html(require("../views/templates/" + Backbone.history.fragment));
-      };
-
-      Router.prototype.homeHandler = function() {
-        navHandler();
-        return tvHandler();
-      };
-
-      Router.prototype.vineHandler = function() {
-        navHandler();
-        tvHandler();
-        return app.views.tvView.setMode('vine');
-      };
-
-      Router.prototype.rankingsHandler = function() {
-        navHandler();
-        tvHandler();
-        return app.views.tvView.setMode('rankings');
-      };
-
-      return Router;
-
-    })(Backbone.Router);
-
-    module.exports = Router;
-
-  }).call(this);
-  
-}});
-
-window.require.define({"lib/view_helper": function(exports, require, module) {
-  (function() {
-
-    Handlebars.registerHelper('ifLT', function(v1, v2, options) {
-      if (v1 < v2) {
-        return options.fn(this);
-      } else {
-        return options.inverse(this);
-      }
-    });
-
-    Handlebars.registerHelper('ifGT', function(v1, v2, options) {
-      if (v1 > v2) {
-        return options.fn(this);
-      } else {
-        return options.inverse(this);
-      }
-    });
-
-    Handlebars.registerHelper('pluralize', function(number, single, plural) {
-      if (number === 1) {
-        return single;
-      } else {
-        return plural;
-      }
-    });
-
-    Handlebars.registerHelper('eachWithFn', function(items, options) {
-      var _this = this;
-      return _(items).map(function(item, i, items) {
-        item._counter = i;
-        item._1counter = i + 1;
-        item._first = i === 0 ? true : false;
-        item._last = i === (items.length - 1) ? true : false;
-        item._even = (i + 1) % 2 === 0 ? true : false;
-        item._thirded = (i + 1) % 3 === 0 ? true : false;
-        item._sixthed = (i + 1) % 6 === 0 ? true : false;
-        _.isFunction(options.hash.fn) && options.hash.fn.apply(options, [item, i, items]);
-        return options.fn(item);
-      }).join('');
-    });
-
-  }).call(this);
-  
-}});
-
-window.require.define({"models/model": function(exports, require, module) {
-  (function() {
-    var Model,
-      __hasProp = Object.prototype.hasOwnProperty,
-      __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
-
-    module.exports = Model = (function(_super) {
-
-      __extends(Model, _super);
-
-      function Model() {
-        Model.__super__.constructor.apply(this, arguments);
-      }
-
-      return Model;
-
-    })(Backbone.Model);
+    module.exports = iphone;
 
   }).call(this);
   
@@ -611,46 +351,6 @@ window.require.define({"utils": function(exports, require, module) {
     })();
 
     module.exports = new Utils;
-
-  }).call(this);
-  
-}});
-
-window.require.define({"views/navigation": function(exports, require, module) {
-  (function() {
-    var NavigationView, View,
-      __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-      __hasProp = Object.prototype.hasOwnProperty,
-      __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
-
-    View = require('./view');
-
-    NavigationView = (function(_super) {
-
-      __extends(NavigationView, _super);
-
-      function NavigationView() {
-        this.renderTitle = __bind(this.renderTitle, this);
-        this.render = __bind(this.render, this);
-        NavigationView.__super__.constructor.apply(this, arguments);
-      }
-
-      NavigationView.prototype.render = function() {
-        return this.renderTitle();
-      };
-
-      NavigationView.prototype.renderTitle = function() {
-        var subtitle;
-        subtitle = utils.getHTMLTitleFromHistoryFragment(Backbone.history.fragment);
-        if (subtitle !== '') subtitle = ' — ' + subtitle;
-        return $('head title').text("MSSPM" + subtitle);
-      };
-
-      return NavigationView;
-
-    })(View);
-
-    module.exports = NavigationView;
 
   }).call(this);
   
@@ -852,288 +552,79 @@ window.require.define({"views/templates/404": function(exports, require, module)
     return "<header class=\"jumbotron subhead page-not-found-header\" id=\"overview\">\n    <h1>Page not found</h1>\n    <p class=\"lead\">Hmmmm... didn't work out like you'd hoped?</p>\n    <p class=\"lead\"><a href=\"\">Take me home</a></p>\n</header>\n\n<div id=\"msspm-web\">\n    <canvas id=\"page-not-found-canvas\"></canvas>\n</div>";});
 }});
 
-window.require.define({"views/templates/modal": function(exports, require, module) {
-  module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
-    helpers = helpers || Handlebars.helpers;
-    var buffer = "", stack1, stack2, foundHelper, tmp1, self=this, functionType="function", helperMissing=helpers.helperMissing, undef=void 0, escapeExpression=this.escapeExpression, blockHelperMissing=helpers.blockHelperMissing;
-
-  function program1(depth0,data) {
-    
-    var buffer = "", stack1;
-    buffer += "id=\"";
-    foundHelper = helpers.id;
-    stack1 = foundHelper || depth0.id;
-    if(typeof stack1 === functionType) { stack1 = stack1.call(depth0, { hash: {} }); }
-    else if(stack1=== undef) { stack1 = helperMissing.call(depth0, "id", { hash: {} }); }
-    buffer += escapeExpression(stack1) + "\"";
-    return buffer;}
-
-  function program3(depth0,data) {
-    
-    var buffer = "", stack1, stack2;
-    buffer += "\n            <a href=\"";
-    foundHelper = helpers.href;
-    stack1 = foundHelper || depth0.href;
-    stack2 = helpers['if'];
-    tmp1 = self.program(4, program4, data);
-    tmp1.hash = {};
-    tmp1.fn = tmp1;
-    tmp1.inverse = self.program(6, program6, data);
-    stack1 = stack2.call(depth0, stack1, tmp1);
-    if(stack1 || stack1 === 0) { buffer += stack1; }
-    buffer += "\" class=\"";
-    foundHelper = helpers['class'];
-    stack1 = foundHelper || depth0['class'];
-    stack2 = helpers['if'];
-    tmp1 = self.program(8, program8, data);
-    tmp1.hash = {};
-    tmp1.fn = tmp1;
-    tmp1.inverse = self.program(10, program10, data);
-    stack1 = stack2.call(depth0, stack1, tmp1);
-    if(stack1 || stack1 === 0) { buffer += stack1; }
-    buffer += "\" ";
-    foundHelper = helpers.close;
-    stack1 = foundHelper || depth0.close;
-    stack2 = helpers['if'];
-    tmp1 = self.program(12, program12, data);
-    tmp1.hash = {};
-    tmp1.fn = tmp1;
-    tmp1.inverse = self.noop;
-    stack1 = stack2.call(depth0, stack1, tmp1);
-    if(stack1 || stack1 === 0) { buffer += stack1; }
-    buffer += ">";
-    foundHelper = helpers.text;
-    stack1 = foundHelper || depth0.text;
-    if(typeof stack1 === functionType) { stack1 = stack1.call(depth0, { hash: {} }); }
-    else if(stack1=== undef) { stack1 = helperMissing.call(depth0, "text", { hash: {} }); }
-    buffer += escapeExpression(stack1) + "</a>\n        ";
-    return buffer;}
-  function program4(depth0,data) {
-    
-    var stack1;
-    foundHelper = helpers.href;
-    stack1 = foundHelper || depth0.href;
-    if(typeof stack1 === functionType) { stack1 = stack1.call(depth0, { hash: {} }); }
-    else if(stack1=== undef) { stack1 = helperMissing.call(depth0, "href", { hash: {} }); }
-    return escapeExpression(stack1);}
-
-  function program6(depth0,data) {
-    
-    
-    return "#";}
-
-  function program8(depth0,data) {
-    
-    var stack1;
-    foundHelper = helpers['class'];
-    stack1 = foundHelper || depth0['class'];
-    if(typeof stack1 === functionType) { stack1 = stack1.call(depth0, { hash: {} }); }
-    else if(stack1=== undef) { stack1 = helperMissing.call(depth0, "class", { hash: {} }); }
-    return escapeExpression(stack1);}
-
-  function program10(depth0,data) {
-    
-    
-    return "btn";}
-
-  function program12(depth0,data) {
-    
-    
-    return "data-dismiss=\"modal\"";}
-
-    buffer += "<div class=\"modal\" ";
-    foundHelper = helpers.id;
-    stack1 = foundHelper || depth0.id;
-    stack2 = helpers['if'];
-    tmp1 = self.program(1, program1, data);
-    tmp1.hash = {};
-    tmp1.fn = tmp1;
-    tmp1.inverse = self.noop;
-    stack1 = stack2.call(depth0, stack1, tmp1);
-    if(stack1 || stack1 === 0) { buffer += stack1; }
-    buffer += ">\n    <div class=\"modal-header\">\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\">×</button>\n        <h3>";
-    foundHelper = helpers.header;
-    stack1 = foundHelper || depth0.header;
-    if(typeof stack1 === functionType) { stack1 = stack1.call(depth0, { hash: {} }); }
-    else if(stack1=== undef) { stack1 = helperMissing.call(depth0, "header", { hash: {} }); }
-    if(stack1 || stack1 === 0) { buffer += stack1; }
-    buffer += "</h3>\n    </div>\n    <div class=\"modal-body\">\n        ";
-    foundHelper = helpers.body;
-    stack1 = foundHelper || depth0.body;
-    if(typeof stack1 === functionType) { stack1 = stack1.call(depth0, { hash: {} }); }
-    else if(stack1=== undef) { stack1 = helperMissing.call(depth0, "body", { hash: {} }); }
-    if(stack1 || stack1 === 0) { buffer += stack1; }
-    buffer += "\n    </div>\n    <div class=\"modal-footer\">\n        ";
-    foundHelper = helpers.buttons;
-    stack1 = foundHelper || depth0.buttons;
-    foundHelper = helpers.eachWithFn;
-    stack2 = foundHelper || depth0.eachWithFn;
-    tmp1 = self.program(3, program3, data);
-    tmp1.hash = {};
-    tmp1.fn = tmp1;
-    tmp1.inverse = self.noop;
-    if(foundHelper && typeof stack2 === functionType) { stack1 = stack2.call(depth0, stack1, tmp1); }
-    else { stack1 = blockHelperMissing.call(depth0, stack2, stack1, tmp1); }
-    if(stack1 || stack1 === 0) { buffer += stack1; }
-    buffer += "\n    </div>\n</div>";
-    return buffer;});
-}});
-
-window.require.define({"views/templates/tv": function(exports, require, module) {
-  module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
-    helpers = helpers || Handlebars.helpers;
-    var foundHelper, self=this;
-
-
-    return "<div class=\"vine-iframe-wrapper vine-iframe-wrapper-background\">\n    <iframe src=\"\" frameborder=\"0\" scrolling=\"no\"></iframe>\n</div>\n<div class=\"vine-mouse-cover\"></div>\n<div class=\"vine-iframe-wrapper\">\n    <iframe src=\"\" frameborder=\"0\" scrolling=\"no\"></iframe>\n</div>\n<input class=\"vine-hash-input\" type=\"text\" autocomplete=\"off\" spellcheck=\"false\" maxlength=\"32\" value=\"\" placeholder=\"Search vines...\" />\n<a href=\"http://mysupersweetprommitzvah.com\" target=\"_blank\"><img class=\"logo\" src=\"static/images/logo.png\" /></a>";});
-}});
-
-window.require.define({"views/tv": function(exports, require, module) {
+window.require.define({"vine": function(exports, require, module) {
   (function() {
-    var TVView, View,
-      __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-      __hasProp = Object.prototype.hasOwnProperty,
-      __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+    var vine;
 
-    View = require('./view');
+    vine = {};
 
-    TVView = (function(_super) {
+    vine.video_length = 6.5 * 1000;
 
-      __extends(TVView, _super);
+    vine.start_cycle_vine = function() {
+      vine.current_index = 0;
+      vine.cycle_vine();
+      clearInterval(vine.cycle_vine_interval);
+      return vine.cycle_vine_interval = setInterval(vine.cycle_vine, vine.video_length * 3);
+    };
 
-      function TVView() {
-        this.render = __bind(this.render, this);
-        TVView.__super__.constructor.apply(this, arguments);
-      }
+    vine.cycle_vine = function() {
+      $('.vine-iframe-wrapper iframe').each(function() {
+        return $(this).attr('src', vine.url_list[vine.current_index]);
+      });
+      vine.current_index = (vine.current_index + 1) % vine.url_list.length;
+      if (vine.current_index >= vine.url_list.length) return vine.load_vines();
+    };
 
-      TVView.prototype.mode = 'home';
-
-      TVView.prototype.template = require('./templates/tv');
-
-      TVView.prototype.render = function() {
-        var view;
-        view = this;
-        $(this.el).html(this.template);
-        window.vine = {};
-        vine.video_length = 6.5 * 1000;
-        vine.start_cycle_vine = function() {
-          vine.current_index = 0;
-          vine.cycle_vine();
-          clearInterval(vine.cycle_vine_interval);
-          return vine.cycle_vine_interval = setInterval(vine.cycle_vine, vine.video_length * 3);
-        };
-        vine.cycle_vine = function() {
-          $(".vine-iframe-wrapper iframe").each(function() {
-            return $(this).attr("src", vine.url_list[vine.current_index]);
-          });
-          vine.current_index = (vine.current_index + 1) % vine.url_list.length;
-          if (vine.current_index >= vine.url_list.length) return vine.load_vines();
-        };
-        vine.load_vines = function() {
-          var i, j, url;
-          i = void 0;
-          j = void 0;
-          url = void 0;
-          vine.url_list = [];
-          vine.url_dict = {};
-          return $.getJSON("http://search.twitter.com/search.json?q=" + vine.get_search_query() + "&rpp=100&include_entities=true&result_type=mixed&callback=?", function(data) {
-            i = 0;
-            while (i < data.results.length) {
-              j = 0;
-              while (j < data.results[i].entities.urls.length) {
-                url = data.results[i].entities.urls[j].expanded_url;
-                if (url.indexOf("vine.co/v/") > -1) {
-                  if (!vine.url_dict[url]) {
-                    vine.url_list.push(url + "/embed/postcard");
-                    vine.url_dict[url] = true;
-                  }
-                }
-                j++;
+    vine.load_vines = function() {
+      var i, j, url;
+      i = void 0;
+      j = void 0;
+      url = void 0;
+      vine.url_list = [];
+      vine.url_dict = {};
+      return $.getJSON('http://search.twitter.com/search.json?q=' + vine.get_search_query() + '&rpp=100&include_entities=true&result_type=mixed&callback=?', function(data) {
+        i = 0;
+        while (i < data.results.length) {
+          j = 0;
+          while (j < data.results[i].entities.urls.length) {
+            url = data.results[i].entities.urls[j].expanded_url;
+            if (url.indexOf('vine.co/v/') > -1) {
+              if (!vine.url_dict[url]) {
+                vine.url_list.push(url + '/embed/postcard');
+                vine.url_dict[url] = true;
               }
-              i++;
             }
-            return vine.start_cycle_vine();
-          });
-        };
-        vine.get_search_query = function() {
-          var query;
-          query = $(".vine-hash-input").val().replace("#", "").replace(new RegExp(" ", "g"), "+");
-          return "vine.co+" + query;
-        };
-        vine.setup_search = function() {
-          return $(".vine-hash-input").keyup(function(e) {
-            if (e.keyCode === 13) return vine.load_vines();
-          });
-        };
-        vine.setup_vine_autoplay = function() {
-          return $(".vine-iframe-wrapper iframe").load(function() {
-            return this.contentWindow.postMessage("play", "*");
-          });
-        };
-        vine.setup_search();
-        vine.setup_vine_autoplay();
-        return vine.load_vines();
-      };
-
-      return TVView;
-
-    })(View);
-
-    module.exports = TVView;
-
-  }).call(this);
-  
-}});
-
-window.require.define({"views/view": function(exports, require, module) {
-  (function() {
-    var View,
-      __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-      __hasProp = Object.prototype.hasOwnProperty,
-      __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
-
-    require('lib/view_helper');
-
-    View = (function(_super) {
-
-      __extends(View, _super);
-
-      function View() {
-        this.routeLink = __bind(this.routeLink, this);
-        View.__super__.constructor.apply(this, arguments);
-      }
-
-      View.prototype.el = '#page';
-
-      View.prototype.events = {
-        'click a': 'routeLink'
-      };
-
-      View.prototype.routeLink = function(e) {
-        var $link, url;
-        $link = $(e.target);
-        url = $link.attr('href');
-        if ($link.attr('target') === '_blank' || typeof url === 'undefined' || url.substr(0, 4) === 'http') {
-          return true;
+            j++;
+          }
+          i++;
         }
-        e.preventDefault();
-        if (url.indexOf('.') === 0) {
-          url = url.substring(1);
-          if (url.indexOf('/') === 0) url = url.substring(1);
-        }
-        if ($link.data('route') || $link.data('route') === '') {
-          url = $link.data('route');
-        }
-        return app.router.navigate(url, {
-          trigger: true
-        });
-      };
+        return vine.start_cycle_vine();
+      });
+    };
 
-      return View;
+    vine.get_search_query = function() {
+      return 'vine.co+' + $('.vine-hash-input').val().replace('#', '').replace(new RegExp(' ', 'g'), '+');
+    };
 
-    })(Backbone.View);
+    vine.setup_search = function() {
+      return $('.vine-hash-input').keyup(function(e) {
+        if (e.keyCode === 13) return vine.load_vines();
+      });
+    };
 
-    module.exports = View;
+    vine.setup_vine_autoplay = function() {
+      return $('.vine-iframe-wrapper iframe').load(function() {
+        return this.contentWindow.postMessage('play', '*');
+      });
+    };
+
+    vine.init = function() {
+      vine.setup_search();
+      vine.setup_vine_autoplay();
+      return vine.load_vines();
+    };
+
+    module.exports = vine;
 
   }).call(this);
   
