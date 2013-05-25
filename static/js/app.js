@@ -76,12 +76,12 @@
 
 window.require.define({"application": function(exports, require, module) {
   (function() {
-    var Application, iphone, vine,
+    var Application,
       __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-    vine = require('vine');
+    window.vine = require('vine');
 
-    iphone = require('iphone');
+    window.iphone = require('iphone');
 
     Application = (function() {
 
@@ -733,6 +733,8 @@ window.require.define({"vine": function(exports, require, module) {
 
     vine.video_length = 6.5 * 1000;
 
+    vine.mode = 0;
+
     vine.start_cycle_vine = function() {
       vine.current_index = 0;
       vine.cycle_vine();
@@ -775,6 +777,12 @@ window.require.define({"vine": function(exports, require, module) {
       });
     };
 
+    vine.change_mode = function() {
+      $('#vine').get(0).className = '';
+      $('#vine').addClass('vine-mode-' + vine.mode);
+      return vine.mode = (vine.mode + 1) % 5;
+    };
+
     vine.get_search_query = function() {
       return 'vine.co+' + $('.vine-hash-input').val().replace('#', '').replace(new RegExp(' ', 'g'), '+');
     };
@@ -794,7 +802,11 @@ window.require.define({"vine": function(exports, require, module) {
     vine.init = function() {
       vine.setup_search();
       vine.setup_vine_autoplay();
-      return vine.load_vines();
+      vine.load_vines();
+      vine.change_mode();
+      return setInterval(function() {
+        return vine.change_mode();
+      }, 30 * 1000);
     };
 
     module.exports = vine;

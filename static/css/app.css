@@ -117,7 +117,6 @@ body {
   margin-left: -300px;
 }
 .vine-iframe-wrapper.vine-iframe-wrapper-background {
-  -webkit-filter: blur(30px);
   -webkit-transform: scale(3);
 }
 .vine-iframe-wrapper iframe {
@@ -169,6 +168,79 @@ body {
 }
 .vine-hash-input:focus::-webkit-input-placeholder {
   text-indent: -9999px;
+}
+@-webkit-keyframes vine-rotate {
+  0% {
+    -webkit-transform: scale(3) rotate(0deg);
+  }
+
+  100% {
+    -webkit-transform: scale(3) rotate(360deg);
+  }
+}
+@-webkit-keyframes vine-rotate-reverse {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(-360deg);
+  }
+}
+@-webkit-keyframes vine-color-rotate {
+  0% {
+    -webkit-filter: hue-rotate(0deg);
+  }
+
+  100% {
+    -webkit-filter: hue-rotate(360deg);
+  }
+}
+#vine.vine-mode-0 .vine-iframe-wrapper.vine-iframe-wrapper-background {
+  -webkit-filter: blur(30px);
+}
+#vine.vine-mode-1 .vine-iframe-wrapper {
+  -webkit-filter: invert(1);
+}
+#vine.vine-mode-1 .vine-iframe-wrapper.vine-iframe-wrapper-background {
+  -webkit-filter: blur(30px) invert(1);
+}
+#vine.vine-mode-2 .vine-iframe-wrapper.vine-iframe-wrapper-background {
+  -webkit-filter: blur(30px);
+  -webkit-perspective: 1000;
+  -webkit-backface-visibility: hidden;
+  -webkit-animation: vine-rotate linear 5s;
+  -webkit-animation-iteration-count: infinite;
+}
+#vine.vine-mode-2 .vine-iframe-wrapper.vine-iframe-wrapper-main {
+  -webkit-perspective: 1000;
+  -webkit-backface-visibility: hidden;
+  -webkit-animation: vine-rotate-reverse linear 5s;
+  -webkit-animation-iteration-count: infinite;
+}
+#vine.vine-mode-3 .vine-iframe-wrapper.vine-iframe-wrapper-main {
+  -webkit-filter: grayscale(1);
+}
+#vine.vine-mode-3 .vine-iframe-wrapper.vine-iframe-wrapper-background {
+  -webkit-filter: blur(30px);
+  -webkit-perspective: 1000;
+  -webkit-backface-visibility: hidden;
+  -webkit-animation: vine-color-rotate linear 5s;
+  -webkit-animation-iteration-count: infinite;
+}
+#vine.vine-mode-4 .vine-iframe-wrapper.vine-iframe-wrapper-main {
+  -webkit-perspective: 1000;
+  -webkit-backface-visibility: hidden;
+  -webkit-animation: vine-color-rotate linear 5s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-transform: translateX(-300px);
+}
+#vine.vine-mode-4 .vine-iframe-wrapper.vine-iframe-wrapper-background {
+  -webkit-perspective: 1000;
+  -webkit-backface-visibility: hidden;
+  -webkit-animation: vine-color-rotate linear 5s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-transform: translateX(300px) scaleX(-1);
 }
 .logo {
   cursor: pointer;
