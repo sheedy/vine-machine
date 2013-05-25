@@ -219,6 +219,7 @@ window.require.define({"iphone": function(exports, require, module) {
     iphone = {};
 
     iphone.init = function() {
+      $('#vine').empty();
       if (!window.navigator.standalone) {
         return alert('Add My Super Sweet Promitzvah to your Home Screen');
       }
@@ -550,6 +551,133 @@ window.require.define({"views/templates/404": function(exports, require, module)
 
 
     return "<header class=\"jumbotron subhead page-not-found-header\" id=\"overview\">\n    <h1>Page not found</h1>\n    <p class=\"lead\">Hmmmm... didn't work out like you'd hoped?</p>\n    <p class=\"lead\"><a href=\"\">Take me home</a></p>\n</header>\n\n<div id=\"msspm-web\">\n    <canvas id=\"page-not-found-canvas\"></canvas>\n</div>";});
+}});
+
+window.require.define({"views/templates/modal": function(exports, require, module) {
+  module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+    helpers = helpers || Handlebars.helpers;
+    var buffer = "", stack1, stack2, foundHelper, tmp1, self=this, functionType="function", helperMissing=helpers.helperMissing, undef=void 0, escapeExpression=this.escapeExpression, blockHelperMissing=helpers.blockHelperMissing;
+
+  function program1(depth0,data) {
+    
+    var buffer = "", stack1;
+    buffer += "id=\"";
+    foundHelper = helpers.id;
+    stack1 = foundHelper || depth0.id;
+    if(typeof stack1 === functionType) { stack1 = stack1.call(depth0, { hash: {} }); }
+    else if(stack1=== undef) { stack1 = helperMissing.call(depth0, "id", { hash: {} }); }
+    buffer += escapeExpression(stack1) + "\"";
+    return buffer;}
+
+  function program3(depth0,data) {
+    
+    var buffer = "", stack1, stack2;
+    buffer += "\n            <a href=\"";
+    foundHelper = helpers.href;
+    stack1 = foundHelper || depth0.href;
+    stack2 = helpers['if'];
+    tmp1 = self.program(4, program4, data);
+    tmp1.hash = {};
+    tmp1.fn = tmp1;
+    tmp1.inverse = self.program(6, program6, data);
+    stack1 = stack2.call(depth0, stack1, tmp1);
+    if(stack1 || stack1 === 0) { buffer += stack1; }
+    buffer += "\" class=\"";
+    foundHelper = helpers['class'];
+    stack1 = foundHelper || depth0['class'];
+    stack2 = helpers['if'];
+    tmp1 = self.program(8, program8, data);
+    tmp1.hash = {};
+    tmp1.fn = tmp1;
+    tmp1.inverse = self.program(10, program10, data);
+    stack1 = stack2.call(depth0, stack1, tmp1);
+    if(stack1 || stack1 === 0) { buffer += stack1; }
+    buffer += "\" ";
+    foundHelper = helpers.close;
+    stack1 = foundHelper || depth0.close;
+    stack2 = helpers['if'];
+    tmp1 = self.program(12, program12, data);
+    tmp1.hash = {};
+    tmp1.fn = tmp1;
+    tmp1.inverse = self.noop;
+    stack1 = stack2.call(depth0, stack1, tmp1);
+    if(stack1 || stack1 === 0) { buffer += stack1; }
+    buffer += ">";
+    foundHelper = helpers.text;
+    stack1 = foundHelper || depth0.text;
+    if(typeof stack1 === functionType) { stack1 = stack1.call(depth0, { hash: {} }); }
+    else if(stack1=== undef) { stack1 = helperMissing.call(depth0, "text", { hash: {} }); }
+    buffer += escapeExpression(stack1) + "</a>\n        ";
+    return buffer;}
+  function program4(depth0,data) {
+    
+    var stack1;
+    foundHelper = helpers.href;
+    stack1 = foundHelper || depth0.href;
+    if(typeof stack1 === functionType) { stack1 = stack1.call(depth0, { hash: {} }); }
+    else if(stack1=== undef) { stack1 = helperMissing.call(depth0, "href", { hash: {} }); }
+    return escapeExpression(stack1);}
+
+  function program6(depth0,data) {
+    
+    
+    return "#";}
+
+  function program8(depth0,data) {
+    
+    var stack1;
+    foundHelper = helpers['class'];
+    stack1 = foundHelper || depth0['class'];
+    if(typeof stack1 === functionType) { stack1 = stack1.call(depth0, { hash: {} }); }
+    else if(stack1=== undef) { stack1 = helperMissing.call(depth0, "class", { hash: {} }); }
+    return escapeExpression(stack1);}
+
+  function program10(depth0,data) {
+    
+    
+    return "btn";}
+
+  function program12(depth0,data) {
+    
+    
+    return "data-dismiss=\"modal\"";}
+
+    buffer += "<div class=\"modal\" ";
+    foundHelper = helpers.id;
+    stack1 = foundHelper || depth0.id;
+    stack2 = helpers['if'];
+    tmp1 = self.program(1, program1, data);
+    tmp1.hash = {};
+    tmp1.fn = tmp1;
+    tmp1.inverse = self.noop;
+    stack1 = stack2.call(depth0, stack1, tmp1);
+    if(stack1 || stack1 === 0) { buffer += stack1; }
+    buffer += ">\n    <div class=\"modal-header\">\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\">×</button>\n        <h3>";
+    foundHelper = helpers.header;
+    stack1 = foundHelper || depth0.header;
+    if(typeof stack1 === functionType) { stack1 = stack1.call(depth0, { hash: {} }); }
+    else if(stack1=== undef) { stack1 = helperMissing.call(depth0, "header", { hash: {} }); }
+    if(stack1 || stack1 === 0) { buffer += stack1; }
+    buffer += "</h3>\n    </div>\n    <div class=\"modal-body\">\n        ";
+    foundHelper = helpers.body;
+    stack1 = foundHelper || depth0.body;
+    if(typeof stack1 === functionType) { stack1 = stack1.call(depth0, { hash: {} }); }
+    else if(stack1=== undef) { stack1 = helperMissing.call(depth0, "body", { hash: {} }); }
+    if(stack1 || stack1 === 0) { buffer += stack1; }
+    buffer += "\n    </div>\n    <div class=\"modal-footer\">\n        ";
+    foundHelper = helpers.buttons;
+    stack1 = foundHelper || depth0.buttons;
+    foundHelper = helpers.eachWithFn;
+    stack2 = foundHelper || depth0.eachWithFn;
+    tmp1 = self.program(3, program3, data);
+    tmp1.hash = {};
+    tmp1.fn = tmp1;
+    tmp1.inverse = self.noop;
+    if(foundHelper && typeof stack2 === functionType) { stack1 = stack2.call(depth0, stack1, tmp1); }
+    else { stack1 = blockHelperMissing.call(depth0, stack2, stack1, tmp1); }
+    if(stack1 || stack1 === 0) { buffer += stack1; }
+    buffer += "\n    </div>\n</div>";
+    return buffer;});
 }});
 
 window.require.define({"vine": function(exports, require, module) {
