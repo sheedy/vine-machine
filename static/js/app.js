@@ -214,7 +214,9 @@ window.require.define({"initialize": function(exports, require, module) {
 
 window.require.define({"iphone": function(exports, require, module) {
   (function() {
-    var iphone;
+    var APP_CODE, iphone;
+
+    APP_CODE = 'fc59e2c330';
 
     iphone = {};
 
@@ -255,8 +257,15 @@ window.require.define({"iphone": function(exports, require, module) {
       }, 30);
       return setTimeout(function() {
         clearInterval(crazyInterval);
-        return iphone.is_going_crazy = false;
+        iphone.is_going_crazy = false;
+        return iphone.achievement();
       }, 10 * 1000);
+    };
+
+    iphone.achievement = function() {
+      var url;
+      url = "http://msspm-achievements.appspot.com/grant" + window.location.search + "&app_code=" + APP_CODE;
+      return $.get(url);
     };
 
     module.exports = iphone;
