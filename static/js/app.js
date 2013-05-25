@@ -243,7 +243,7 @@ window.require.define({"iphone": function(exports, require, module) {
         var alpha;
         if (iphone.is_going_crazy) return;
         alpha = parseInt(event.alpha, 10);
-        $('#flips').html(iphone.total_flips);
+        $('#flips').html(iphone.total_flips + '<br/>' + alpha);
         if (((iphone.flip_direction === 1) && ((0 < alpha && alpha < 50))) || ((iphone.flip_direction === -1) && ((130 < alpha && alpha < 180)))) {
           iphone.total_flips++;
           iphone.flip_direction *= -1;
