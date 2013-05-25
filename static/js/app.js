@@ -243,8 +243,8 @@ window.require.define({"iphone": function(exports, require, module) {
         var alpha;
         if (iphone.is_going_crazy) return;
         alpha = parseInt(event.alpha, 10);
-        $('#flips').html(iphone.total_flips + '<br/>' + alpha);
-        if (((iphone.flip_direction === 1) && ((0 < alpha && alpha < 50))) || ((iphone.flip_direction === -1) && ((130 < alpha && alpha < 180)))) {
+        $('#flips').html(iphone.total_flips);
+        if (((iphone.flip_direction === 1) && ((90 < alpha && alpha < 120))) || ((iphone.flip_direction === -1) && ((270 < alpha && alpha < 300)))) {
           iphone.total_flips++;
           iphone.flip_direction *= -1;
         }
