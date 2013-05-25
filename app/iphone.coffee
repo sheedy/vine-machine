@@ -11,7 +11,7 @@ iphone.init = ->
     if not window.navigator.standalone
 
         if localStorage and (window.location.search is '') and localStorage.getItem('achievement_grant_auth')
-            return alert('Add My Super Sweet Promitzvah to your Home Screen')
+            alert('Add My Super Sweet Promitzvah to your Home Screen')
 
         if localStorage and window.location.search
             localStorage.setItem('achievement_grant_auth', window.location.search)
