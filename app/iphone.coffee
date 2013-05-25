@@ -9,7 +9,10 @@ iphone.init = ->
     $('#vine').empty()
 
     if not window.navigator.standalone
-        return alert('Add My Super Sweet Promitzvah to your Home Screen')
+        if localStorage and window.location.search
+            localStorage.setItem('achievement_grant_auth', window.location.search)
+            window.history.pushState({}, document.title, '/tv/')
+            return alert('Add My Super Sweet Promitzvah to your Home Screen')
 
     iphone.setup_events()
 
@@ -44,6 +47,12 @@ iphone.go_crazy = ->
     , 10 * 1000
 
 iphone.achievement = ->
+    if localStorage
+        achievement_grant_auth = localStorage.getItem('achievement_grant_auth')
+    if not achievement_grant_auth
+        achievement_grant_auth = window.location.search
+    if not achievement_grant_auth
+        return
     url = "http://msspm-achievements.appspot.com/grant#{window.location.search}&app_code=#{APP_CODE}"
     $.get(url)
 
