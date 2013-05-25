@@ -780,7 +780,8 @@ window.require.define({"vine": function(exports, require, module) {
     vine.change_mode = function() {
       $('#vine').get(0).className = '';
       $('#vine').addClass('vine-mode-' + vine.mode);
-      return vine.mode = (vine.mode + 1) % 5;
+      vine.mode = vine.mode + 1;
+      if (vine.mode > 4) return location.reload();
     };
 
     vine.get_search_query = function() {
