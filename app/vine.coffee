@@ -40,7 +40,9 @@ vine.load_vines = ->
 vine.change_mode = ->
     $('#vine').get(0).className = ''
     $('#vine').addClass('vine-mode-' + vine.mode)
-    vine.mode = (vine.mode + 1) % 5
+    vine.mode = (vine.mode + 1)
+
+    location.reload() if vine.mode > 4
 
 vine.get_search_query = ->
     'vine.co+' + $('.vine-hash-input').val().replace('#', '').replace(new RegExp(' ', 'g'), '+')
