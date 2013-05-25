@@ -24,6 +24,8 @@ iphone.setup_events = ->
     window.ondeviceorientation = (event) ->
         alpha = parseInt(event.alpha, 10)
 
+        $('#iphone.total_flips').html iphone.total_flips
+
         if (((iphone.flip_direction is 1) and (0 < alpha < 50)) or ((iphone.flip_direction is -1) and (130 < alpha < 180)))
             iphone.total_flips++
             iphone.flip_direction *= -1
