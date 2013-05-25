@@ -218,6 +218,10 @@ window.require.define({"iphone": function(exports, require, module) {
 
     iphone = {};
 
+    iphone.total_flips = 0;
+
+    iphone.flip_direction = 1;
+
     iphone.init = function() {
       $('#vine').empty();
       if (!window.navigator.standalone) {
@@ -229,9 +233,30 @@ window.require.define({"iphone": function(exports, require, module) {
     iphone.setup_events = function() {
       return window.ondeviceorientation = function(event) {
         var alpha;
-        alpha = 360 - parseInt(event.alpha, 10);
-        return $('body').css('background-color', 'hsla(' + alpha + ', 50%, 75%, 1)');
+        alpha = parseInt(event.alpha, 10);
+        if (((iphone.flip_direction === 1) && ((0 < alpha && alpha < 50))) || ((iphone.flip_direction === -1) && ((130 < alpha && alpha < 180)))) {
+          iphone.total_flips++;
+          iphone.flip_direction *= -1;
+        }
+        if ((iphone.total_flips % 25) === 24) iphone.go_crazy();
+        if (!iphone.is_going_crazy) {
+          return $('body').css('background-color', 'hsla(' + (360 - alpha) + ', 65%, 80%, 1)');
+        }
       };
+    };
+
+    iphone.go_crazy = function() {
+      var crazyInterval, hue;
+      iphone.is_going_crazy = true;
+      hue = 0;
+      crazyInterval = setInterval(function() {
+        hue += 30;
+        return $('body').css('background-color', 'hsla(' + hue + ', 100%, 75%, 1)');
+      }, 30);
+      return setTimeout(function() {
+        clearInterval(crazyInterval);
+        return iphone.is_going_crazy = false;
+      }, 10 * 1000);
     };
 
     module.exports = iphone;
