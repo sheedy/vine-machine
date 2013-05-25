@@ -248,7 +248,7 @@ window.require.define({"iphone": function(exports, require, module) {
           iphone.total_flips++;
           iphone.flip_direction *= -1;
         }
-        if ((iphone.total_flips % 25) === 24) iphone.go_crazy();
+        if ((iphone.total_flips % 17) === 16) iphone.go_crazy();
         return $('body').css('background-color', 'hsla(' + (360 - alpha) + ', 65%, 80%, 1)');
       };
     };
