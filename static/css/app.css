@@ -202,4 +202,15 @@ body {
     width: 80%;
     bottom: 10%;
   }
+  #flips {
+    top: 10%;
+    width: 100%;
+    text-align: center;
+    font-size: 40px;
+    font-weight: 300;
+    color: #fff;
+    text-shadow: 1px 1px rgba(0,0,0,0.30);
+    opacity: 0.3;
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=30);
+  }
 }
