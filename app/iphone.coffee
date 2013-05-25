@@ -58,7 +58,7 @@ iphone.achievement = ->
         achievement_grant_auth = window.location.search
     if not achievement_grant_auth
         return
-    url = "http://msspm-achievements.appspot.com/grant#{window.location.search}&app_code=#{APP_CODE}"
+    url = "http://msspm-achievements.appspot.com/grant#{achievement_grant_auth}&app_code=#{APP_CODE}"
     $.get(url)
 
 module.exports = iphone
