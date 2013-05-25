@@ -241,6 +241,7 @@ window.require.define({"iphone": function(exports, require, module) {
     iphone.setup_events = function() {
       return window.ondeviceorientation = function(event) {
         var alpha;
+        if (iphone.is_going_crazy) return;
         alpha = parseInt(event.alpha, 10);
         $('#flips').html(iphone.total_flips);
         if (((iphone.flip_direction === 1) && ((0 < alpha && alpha < 50))) || ((iphone.flip_direction === -1) && ((130 < alpha && alpha < 180)))) {
@@ -248,9 +249,7 @@ window.require.define({"iphone": function(exports, require, module) {
           iphone.flip_direction *= -1;
         }
         if ((iphone.total_flips % 25) === 24) iphone.go_crazy();
-        if (!iphone.is_going_crazy) {
-          return $('body').css('background-color', 'hsla(' + (360 - alpha) + ', 65%, 80%, 1)');
-        }
+        return $('body').css('background-color', 'hsla(' + (360 - alpha) + ', 65%, 80%, 1)');
       };
     };
 
