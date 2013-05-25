@@ -1,3 +1,5 @@
+APP_CODE = 'fc59e2c330'
+
 iphone = {}
 
 iphone.total_flips = 0
@@ -38,6 +40,11 @@ iphone.go_crazy = ->
     setTimeout ->
         clearInterval crazyInterval
         iphone.is_going_crazy = false
+        iphone.achievement()
     , 10 * 1000
+
+iphone.achievement = ->
+    url = "http://msspm-achievements.appspot.com/grant#{window.location.search}&app_code=#{APP_CODE}"
+    $.get(url)
 
 module.exports = iphone
