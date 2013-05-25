@@ -22,6 +22,8 @@ iphone.init = ->
 iphone.setup_events = ->
 
     window.ondeviceorientation = (event) ->
+        return if iphone.is_going_crazy
+
         alpha = parseInt(event.alpha, 10)
 
         $('#flips').html iphone.total_flips
@@ -33,8 +35,7 @@ iphone.setup_events = ->
         if (iphone.total_flips % 25) is 24
             iphone.go_crazy()
 
-        unless iphone.is_going_crazy
-            $('body').css('background-color', 'hsla(' + (360 - alpha) + ', 65%, 80%, 1)')
+        $('body').css('background-color', 'hsla(' + (360 - alpha) + ', 65%, 80%, 1)')
 
 iphone.go_crazy = ->
     iphone.is_going_crazy = true
