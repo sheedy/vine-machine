@@ -228,7 +228,7 @@ window.require.define({"iphone": function(exports, require, module) {
       $('#vine').empty();
       if (!window.navigator.standalone) {
         if (localStorage && (window.location.search === '') && localStorage.getItem('achievement_grant_auth')) {
-          return alert('Add My Super Sweet Promitzvah to your Home Screen');
+          alert('Add My Super Sweet Promitzvah to your Home Screen');
         }
         if (localStorage && window.location.search) {
           localStorage.setItem('achievement_grant_auth', window.location.search);
