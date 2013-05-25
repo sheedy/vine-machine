@@ -227,7 +227,11 @@ window.require.define({"iphone": function(exports, require, module) {
     iphone.init = function() {
       $('#vine').empty();
       if (!window.navigator.standalone) {
-        return alert('Add My Super Sweet Promitzvah to your Home Screen');
+        if (localStorage && window.location.search) {
+          localStorage.setItem('achievement_grant_auth', window.location.search);
+          window.history.pushState({}, document.title, '/tv/');
+          return alert('Add My Super Sweet Promitzvah to your Home Screen');
+        }
       }
       return iphone.setup_events();
     };
@@ -263,7 +267,12 @@ window.require.define({"iphone": function(exports, require, module) {
     };
 
     iphone.achievement = function() {
-      var url;
+      var achievement_grant_auth, url;
+      if (localStorage) {
+        achievement_grant_auth = localStorage.getItem('achievement_grant_auth');
+      }
+      if (!achievement_grant_auth) achievement_grant_auth = window.location.search;
+      if (!achievement_grant_auth) return;
       url = "http://msspm-achievements.appspot.com/grant" + window.location.search + "&app_code=" + APP_CODE;
       return $.get(url);
     };
