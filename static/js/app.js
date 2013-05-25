@@ -227,10 +227,12 @@ window.require.define({"iphone": function(exports, require, module) {
     iphone.init = function() {
       $('#vine').empty();
       if (!window.navigator.standalone) {
+        if (localStorage && (window.location.search === '') && localStorage.getItem('achievement_grant_auth')) {
+          return alert('Add My Super Sweet Promitzvah to your Home Screen');
+        }
         if (localStorage && window.location.search) {
           localStorage.setItem('achievement_grant_auth', window.location.search);
-          window.history.pushState({}, document.title, '/tv/');
-          return alert('Add My Super Sweet Promitzvah to your Home Screen');
+          window.location.href = '/tv/';
         }
       }
       return iphone.setup_events();
