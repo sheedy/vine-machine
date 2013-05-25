@@ -1,30 +1,12 @@
-Login = require 'lib/login'
-Router = require 'lib/router'
+vine = require 'vine'
+iphone = require 'iphone'
 
 class Application
 
     initialize: =>
-        @msspm = new Login
+        if (navigator.userAgent.match(/iPhone/i)) or (navigator.userAgent.match(/iPod/i))
+            return iphone.init()
 
-        @views = {}
-        @collections = {}
-
-        @setupStyles()
-
-        @msspm.verifyUser (data) =>
-            $('#loader').hide()
-
-            @router = new Router
-
-            Backbone.history.start
-                pushState: true
-                root: '/tv/'
-
-            Object.freeze? @
-
-    setupStyles: ->
-        $('body').css
-            background: constants.styles.background
-            color: "rgb(#{constants.styles.color_rgb})"
+        vine.init()
 
 module.exports = new Application

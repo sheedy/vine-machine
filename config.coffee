@@ -16,7 +16,6 @@ exports.config =
             order:
                 before: [
                     'vendor/scripts/core.coffee'
-                    'vendor/scripts/chrome.inspector-detector.js'
                     'vendor/scripts/console-helper.js'
                     'vendor/scripts/jquery-1.7.2.js'
                     'vendor/scripts/jquery-ui-min.js'

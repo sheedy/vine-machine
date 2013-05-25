@@ -1,4 +1,3 @@
-window.env = require 'env'
 window.utils = require 'utils'
 window.constants = require 'constants'
 window.app = require 'application'
