@@ -61,6 +61,6 @@ vine.init = ->
     vine.change_mode()
     setInterval ->
         vine.change_mode()
-    , 3 * 10000
+    , 30 * 1000
 
 module.exports = vine
