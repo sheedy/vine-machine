@@ -1,6 +1,8 @@
 iphone = {}
 
 iphone.init = ->
+    $('#vine').empty()
+
     if not window.navigator.standalone
         return alert('Add My Super Sweet Promitzvah to your Home Screen')
 

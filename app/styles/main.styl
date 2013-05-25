@@ -101,130 +101,6 @@ html
         position fixed
         top 10px
 
-// msspm stuff
-
-@-webkit-keyframes msspm-flyin
-    0%
-        opacity 0
-        -webkit-transform scale(0.5)
-
-    100%
-        opacity 1
-        -webkit-transform scale(1)
-
-@-webkit-keyframes msspm-fadein
-    0%
-        opacity 0
-
-    100%
-        opacity 1
-
-@-webkit-keyframes flipInY
-    0%
-        -webkit-transform rotateY(90deg)
-        opacity 0
-
-    40%
-        -webkit-transform rotateY(-10deg)
-        opacity 1
-
-    70%
-        -webkit-transform rotateY(10deg)
-        opacity 1
-
-    100%
-        -webkit-transform rotateY(0deg)
-        opacity 1
-
-@-webkit-keyframes featureEmployee
-    0%
-        height 550px
-    100%
-        height 800px
-
-.msspm-flyin
-    -webkit-perspective 1000
-    -webkit-backface-visibility hidden
-    -webkit-animation msspm-flyin 0.7s
-
-.msspm-fadein
-    -webkit-perspective 1000
-    -webkit-backface-visibility hidden
-    -webkit-animation msspm-fadein 0.7s
-
-.msspm-flipInY
-    -webkit-animation-duration 2s
-    -webkit-animation-fill-mode both
-    -webkit-backface-visibility visible !important
-    -webkit-animation-name flipInY
-
-.msspm-featureEmployee-and-flipInY
-    -webkit-animation-fill-mode both
-    -webkit-backface-visibility visible !important
-    -webkit-animation featureEmployee, flipInY
-    -webkit-animation-duration 1s, 2s
-
-.modal-high-scores-list
-
-    .employee
-        display block
-        position relative
-        height 40px
-        width 100%
-        box-sizing border-box
-        box-shadow none
-        background transparent
-        transition opacity 0.5s
-        margin-bottom 1px
-
-        &:before
-            content " "
-            display block
-            position absolute
-            transition left 0.4s
-            left 0
-            top 0
-            height 40px
-            width 40px
-            z-index 1
-            background rgb(41, 65, 80)
-            box-shadow 0 0 0 1px rgb(41, 65, 80)
-
-        .photo
-            position absolute
-            left 0
-            width 40px
-            height 40px
-            z-index 2
-            -webkit-filter grayscale(1)
-            opacity 0.8
-
-        .name, .score
-            font-weight 100
-            box-sizing border-box
-            padding-left 50px
-            padding-right 100px
-            overflow hidden
-            text-overflow ellipsis
-            display inline-block
-            height 100%
-            width auto
-            line-height 40px
-            font-size 28px
-            color rgb(41, 65, 80)
-            opacity 1
-            text-align left
-            position absolute
-            top 0
-            margin-top 0
-
-        .score
-            position: absolute
-            text-align right
-            right 0
-            width 220px
-            padding 0
-
 // msspm
 
 *
@@ -309,6 +185,12 @@ body
     opacity 0.8
 
 @media (max-width: 480px)
+
+    #page
+        position fixed
+        height 100%
+        width 100%
+        overflow hidden
 
     .logo
         left 10%
