@@ -26,9 +26,9 @@ iphone.setup_events = ->
 
         alpha = parseInt(event.alpha, 10)
 
-        $('#flips').html iphone.total_flips + '<br/>' + alpha
+        $('#flips').html iphone.total_flips
 
-        if (((iphone.flip_direction is 1) and (0 < alpha < 50)) or ((iphone.flip_direction is -1) and (130 < alpha < 180)))
+        if (((iphone.flip_direction is 1) and (90 < alpha < 120)) or ((iphone.flip_direction is -1) and (270 < alpha < 300)))
             iphone.total_flips++
             iphone.flip_direction *= -1
 
