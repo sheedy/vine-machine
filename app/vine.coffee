@@ -2,6 +2,8 @@ vine = {}
 
 vine.video_length = 6.5 * 1000
 
+vine.mode = 0
+
 vine.start_cycle_vine = ->
     vine.current_index = 0
     vine.cycle_vine()
@@ -13,7 +15,7 @@ vine.cycle_vine = ->
         $(this).attr 'src', vine.url_list[vine.current_index]
 
     vine.current_index = (vine.current_index + 1) % vine.url_list.length
-    vine.load_vines()  if vine.current_index >= vine.url_list.length
+    vine.load_vines() if vine.current_index >= vine.url_list.length
 
 vine.load_vines = ->
     i = undefined
@@ -35,6 +37,11 @@ vine.load_vines = ->
             i++
         vine.start_cycle_vine()
 
+vine.change_mode = ->
+    $('#vine').get(0).className = ''
+    $('#vine').addClass('vine-mode-' + vine.mode)
+    vine.mode = (vine.mode + 1) % 5
+
 vine.get_search_query = ->
     'vine.co+' + $('.vine-hash-input').val().replace('#', '').replace(new RegExp(' ', 'g'), '+')
 
@@ -50,5 +57,10 @@ vine.init = ->
     vine.setup_search()
     vine.setup_vine_autoplay()
     vine.load_vines()
+
+    vine.change_mode()
+    setInterval ->
+        vine.change_mode()
+    , 3 * 10000
 
 module.exports = vine

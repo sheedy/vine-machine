@@ -1,5 +1,5 @@
-vine = require 'vine'
-iphone = require 'iphone'
+window.vine = require 'vine'
+window.iphone = require 'iphone'
 
 class Application
 
