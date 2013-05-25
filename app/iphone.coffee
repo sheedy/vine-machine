@@ -32,7 +32,7 @@ iphone.setup_events = ->
             iphone.total_flips++
             iphone.flip_direction *= -1
 
-        if (iphone.total_flips % 25) is 24
+        if (iphone.total_flips % 17) is 16
             iphone.go_crazy()
 
         $('body').css('background-color', 'hsla(' + (360 - alpha) + ', 65%, 80%, 1)')
