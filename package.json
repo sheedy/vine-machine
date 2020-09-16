@@ -23,7 +23,7 @@
 
         "handlebars-brunch": "1.0.x || 1.1.x",
 
-        "uglify-js-brunch": "1.0.x || 1.1.x",
+        "uglify-js-brunch": "1.7.8",
         "clean-css-brunch": "1.0.x || 1.1.x"
     },
     "devDependencies": {
