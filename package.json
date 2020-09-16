@@ -15,7 +15,7 @@
         "start": "brunch watch --server"
     },
     "dependencies": {
-        "javascript-brunch": "1.0.x || 1.1.x",
+        "javascript-brunch": "1.8.0",
         "coffee-script-brunch": "1.0.x || 1.1.x",
 
         "css-brunch": "1.0.x || 1.1.x",
