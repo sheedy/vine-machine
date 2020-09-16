@@ -24,7 +24,7 @@
         "handlebars-brunch": "1.0.x || 1.1.x",
 
         "uglify-js-brunch": "1.0.x || 1.1.x",
-        "clean-css-brunch": "1.0.x || 1.1.x"
+        "clean-css-brunch": "1.8.0"
     },
     "devDependencies": {
         "mocha": "0.14.0",
